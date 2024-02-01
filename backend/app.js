@@ -5,6 +5,8 @@ import { connectDatabase } from "./config/db.connect.js";
 dotenv.config({ path : "backend/config/config.env"})
 import routes from "./routes/productRoutes.js"
 
+app.use(express.json());
+
 connectDatabase();
 app.use("/api/v1",routes)
 app.listen(process.env.PORT , () => {
