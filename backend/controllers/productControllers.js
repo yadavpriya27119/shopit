@@ -1,12 +1,15 @@
 import catchAsyncErr from "../middleware/catchAsyncErr.js"
 import Product from "../models/product.js"
+import APIFilters from "../utils/apiFilters.js"
 import ErrorHandler from "../utils/errorHandler.js"
 export const getProducts = catchAsyncErr ( async (req, res) => {
-    const products = await Product.find()
-    if(!product){
-        return next(new ErrorHandler('Product Not Found',404))
-    }
+    const apiFilters= new APIFilters(Product, req.query).search()
+    let products = await apiFilters.query
+    let filteredProductCounts = products.length;
+    // const products = await Product.find()
+    
     res.status(200).json({
+        filteredProductCounts,
         products
     })
 })

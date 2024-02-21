@@ -6,10 +6,15 @@ export default (err, req, res , next) => {
         message: err?.message || "Internal Server Error",
     };
     //handle Invalid Mongoose Id Error
-    // if(err.name === 'CastError'){
-    //     const message = `Resource not found, Invalid: ${err?.path}`
-    //     error = ErrorHandler(message,404)
-    // }
+    if(err.name === 'CastError'){
+        const message = `Resource not found, Invalid: ${err?.path}`
+        error = new ErrorHandler(message,404)
+    }
+     //handle Invalid validation Id Error
+     if(err.name === 'ValidationError'){
+        const message = Object.values(err.errors).map((value) => value.message)
+        error = new ErrorHandler(message,404)
+    }
     if(process.env.NODE_ENV === 'DEVELOPMENT') {
         res.status(error.statusCode).json({
             message: error.message,
