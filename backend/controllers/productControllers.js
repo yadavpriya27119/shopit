@@ -3,12 +3,18 @@ import Product from "../models/product.js"
 import APIFilters from "../utils/apiFilters.js"
 import ErrorHandler from "../utils/errorHandler.js"
 export const getProducts = catchAsyncErr ( async (req, res) => {
+    const resPerPage = 4;
     const apiFilters= new APIFilters(Product, req.query).search().filters()
     let products = await apiFilters.query
     let filteredProductCounts = products.length;
     // const products = await Product.find()
+    apiFilters.pagination(resPerPage)
+    console.log('req.user:::',req.user)
+    products = await apiFilters.query.clone()
     
     res.status(200).json({
+
+        resPerPage,
         filteredProductCounts,
         products
     })
